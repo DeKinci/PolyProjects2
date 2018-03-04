@@ -38,9 +38,10 @@ class PriceListTest {
     @Test
     void getByIdTest() {
         MockedProduct product = new MockedProduct();
-
         int id = priceList.add(product);
-        assertEquals(product, priceList.get(id));
+
+        assertEquals(product, priceList.get(id).get());
+        assertFalse(priceList.get(id + 1).isPresent());
     }
 
     @Test
@@ -48,7 +49,8 @@ class PriceListTest {
         MockedProduct product = new MockedProduct();
 
         int id = priceList.add(product);
-        assertEquals(id, priceList.get(product));
+        assertEquals(Integer.valueOf(id), priceList.getId(product).get());
+        assertFalse(priceList.getId(new MockedProduct()).isPresent());
     }
 
     private int addNewProduct() {
@@ -64,25 +66,37 @@ class PriceListTest {
 
         MockedProduct product = new MockedProduct(oldPrice);
         int id = priceList.add(product);
-        priceList.changePrice(id, newPrice);
+        assertTrue(priceList.changePrice(id, newPrice));
 
         assertNotEquals(oldPrice, priceList.getPrice(id));
         assertEquals(newPrice, priceList.getPrice(id));
     }
 
     @Test
+    void changePriceWrongIdTest() {
+        int id = addNewProduct();
+        assertFalse(priceList.changePrice(id + 1, new MockedPrice(0)));
+    }
+
+    @Test
     void renameProduct() {
         MockedProduct product = new MockedProduct();
         String oldName = product.getName();
-        String newName = "Best product of the world";
+        String newName = "foo";
 
         int id = priceList.add(product);
         priceList.renameProduct(id, newName);
 
-        String returnedNewName = priceList.get(id).getName();
+        String returnedNewName = priceList.get(id).get().getName();
 
         assertNotEquals(oldName, returnedNewName);
         assertEquals(newName, returnedNewName);
+    }
+
+    @Test
+    void renameProductWithWrongIdTest() {
+        int id = addNewProduct();
+        assertFalse(priceList.renameProduct(id + 1, "bar"));
     }
 
     @Test
@@ -91,7 +105,7 @@ class PriceListTest {
         priceList.get(id);
 
         priceList.delete(id);
-        assertThrows(IllegalArgumentException.class, () -> priceList.get(id));
+        assertFalse(priceList.get(id).isPresent());
     }
 
     @Test
@@ -102,6 +116,6 @@ class PriceListTest {
 
         MockedProduct product = new MockedProduct(new MockedPrice(price));
         int id = priceList.add(product);
-        assertEquals(cost, priceList.calculateCost(id, amount).getInMinimalUnits());
+        assertEquals(cost, priceList.calculateCost(id, amount).get().getInMinimalUnits());
     }
 }

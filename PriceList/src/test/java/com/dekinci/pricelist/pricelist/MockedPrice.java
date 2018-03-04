@@ -2,21 +2,23 @@ package com.dekinci.pricelist.pricelist;
 
 import com.dekinci.pricelist.Price;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class MockedPrice implements Price {
-    private int price;
+    private final AtomicInteger price = new AtomicInteger();
 
     MockedPrice(int price) {
-        this.price = price;
+        this.price.set(price);
     }
 
     @Override
     public Price multiply(int multiplier) {
-        return new MockedPrice(price * multiplier);
+        return new MockedPrice(price.get() * multiplier);
     }
 
     @Override
     public int getInMinimalUnits() {
-        return price;
+        return price.get();
     }
 
     @Override
@@ -28,11 +30,11 @@ public class MockedPrice implements Price {
             return false;
 
         MockedPrice that = (MockedPrice) o;
-        return price == that.price;
+        return price.equals(that.price);
     }
 
     @Override
     public int hashCode() {
-        return price;
+        return price.get();
     }
 }

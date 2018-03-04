@@ -3,15 +3,18 @@ package com.dekinci.pricelist.pricelist;
 import com.dekinci.pricelist.Price;
 import com.dekinci.pricelist.Product;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+
 public class MockedProduct implements Product {
-    private static int productCounter = 1;
+    private static AtomicInteger productCounter = new AtomicInteger(1);
 
     private static String generateName() {
-        return "MockedProduct #" + productCounter++;
+        return "MockedProduct #" + productCounter.getAndIncrement();
     }
 
-    private String name;
-    private Price price;
+    private AtomicReference<String> name = new AtomicReference<>();
+    private AtomicReference<Price> price = new AtomicReference<>();
 
     MockedProduct() {
         this(generateName());
@@ -31,18 +34,18 @@ public class MockedProduct implements Product {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name.set(name);
     }
 
     public String getName() {
-        return name;
+        return name.get();
     }
 
     public void setPrice(Price price) {
-        this.price = price;
+        this.price.set(price);
     }
 
     public Price getPrice() {
-        return price;
+        return price.get();
     }
 }
