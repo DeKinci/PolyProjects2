@@ -5,23 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dekinci</groupId>
-    <artifactId>PriceList</artifactId>
+    <artifactId>Myls</artifactId>
     <version>1.0</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.9</source>
-                    <target>1.9</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <properties>
         <junit.jupiter.version>5.1.0</junit.jupiter.version>
+        <maven.compiler.source>1.9</maven.compiler.source>
+        <maven.compiler.target>1.9</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -37,5 +27,14 @@
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.beust/jcommander -->
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.72</version>
+        </dependency>
+
     </dependencies>
+    
 </project>
