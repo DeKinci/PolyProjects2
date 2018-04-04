@@ -77,6 +77,7 @@ public class FileComparator implements Comparator<Path> {
         }
     }
 
+    //any means necessary
     private BasicFileAttributes getAtAnyCost(Path path) {
         BasicFileAttributes result = cache.get(path);
         if (result == null) try {
