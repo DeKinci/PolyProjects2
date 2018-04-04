@@ -1,5 +1,6 @@
 package com.dekinci.myls.sorting;
 
+import com.dekinci.myls.application.PathAttributeManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileComparatorTest {
     private List<Path> paths = new ArrayList<>();
+    private PathAttributeManager cacheManager = PathAttributeManager.getCache();
 
     private final static int files = 8;
     private final static int dirs = 2;
@@ -61,32 +62,34 @@ class FileComparatorTest {
     }
 
     @Test
-    void test() throws IOException {
+    void test() {
         FileComparator comparator = createComparator(Order.reversed(Attribute.SIZE), Order.straight(Attribute.NAME));
         print();
         paths.sort(comparator);
         print();
 
         for (int i = 0; i < total; i++) {
-            BasicFileAttributes attributesI = Files.readAttributes(paths.get(i), BasicFileAttributes.class);
-            boolean iDir = attributesI.isDirectory();
+            BasicFileAttributes attributesI = cacheManager.get(paths.get(i));
+            boolean iIsDir = attributesI.isDirectory();
+            long iSize = attributesI.size();
 
             for (int j = 0; j < total; j++) {
-                BasicFileAttributes attributesJ = Files.readAttributes(paths.get(j), BasicFileAttributes.class);
-                boolean jDir = attributesJ.isDirectory();
+                BasicFileAttributes attributesJ = cacheManager.get(paths.get(j));
+                boolean jIsDir = attributesJ.isDirectory();
+                long jSize = attributesJ.size();
 
-                if (iDir && jDir)
-                    assertTrue(j > i ? nameBigger(j, i) : nameBigger(i, j));
-                else if (iDir)
+                if (iIsDir && jIsDir)
+                    assertTrue(compareIndexNames(i, j));
+                else if (iIsDir)
                     assertTrue(i < j);
-                else if (jDir)
+                else if (jIsDir)
                     assertTrue(i > j);
                 else {
-                    if (attributesI.size() == attributesJ.size())
-                        assertTrue(j > i ? nameBigger(j, i) : nameBigger(i, j));
-                    else if (attributesI.size() > attributesJ.size())
+                    if (iSize == jSize)
+                        assertTrue(compareIndexNames(i, j));
+                    else if (iSize > jSize)
                         assertTrue(i < j);
-                    else if (attributesI.size() < attributesJ.size())
+                    else if (iSize < jSize)
                         assertTrue(i > j);
                 }
             }
@@ -98,8 +101,10 @@ class FileComparatorTest {
         System.out.println("********************************************");
     }
 
-    private boolean nameBigger(int a, int b) {
-        return paths.get(a).getFileName().toString().compareTo(paths.get(b).getFileName().toString()) >= 0;
+    private boolean compareIndexNames(int a, int b) {
+        boolean straight = paths.get(a).getFileName().toString()
+                .compareTo(paths.get(b).getFileName().toString()) >= 0;
+        return b <= a == straight;
     }
 
     private FileComparator createComparator(Order... orders) {

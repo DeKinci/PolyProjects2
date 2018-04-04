@@ -1,20 +1,29 @@
 package com.dekinci.myls.sorting;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import com.dekinci.myls.application.PathAttributeManager;
 
-import static com.dekinci.myls.sorting.Sorting.*;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.dekinci.myls.sorting.Sorting.Order;
 
 public class FileComparator implements Comparator<Path> {
-    private Map<Path, BasicFileAttributes> cache = new WeakHashMap<>();
-    private List<Comparator<Path>> comparators = new ArrayList<>();
+    private ComplexComparator<Path> complexComparator;
+    private PathAttributeManager cacheManager = PathAttributeManager.getCache();
+
+    private Comparator<Path> directoryFileComparator = Comparator.comparing(a -> !cacheManager.get(a).isDirectory());
+    private Comparator<Path> nameComparator = Comparator.comparing(a -> a.getFileName().toString());
+    private Comparator<Path> sizeComparator = Comparator.comparingLong(a -> cacheManager.get(a).size());
+    private Comparator<Path> dateComparator = Comparator.comparing(a -> cacheManager.get(a).lastModifiedTime());
 
     public FileComparator(List<Order> orders) {
+        List<Comparator<Path>> comparators = new ArrayList<>();
+        comparators.add(directoryFileComparator);
         for (Order order : orders)
             comparators.add(createComparator(order));
+        complexComparator = new ComplexComparator<>(comparators);
     }
 
     private Comparator<Path> createComparator(Order order) {
@@ -22,13 +31,13 @@ public class FileComparator implements Comparator<Path> {
 
         switch (order.getAttribute()) {
             case NAME:
-                result = new NameComparator();
+                result = nameComparator;
                 break;
             case SIZE:
-                result = new SizeComparator();
+                result = sizeComparator;
                 break;
             case DATE:
-                result = new DateComparator();
+                result = dateComparator;
                 break;
         }
 
@@ -39,53 +48,6 @@ public class FileComparator implements Comparator<Path> {
 
     @Override
     public int compare(Path a, Path b) {
-        if (a.equals(b))
-            return 0;
-
-        if (getAtAnyCost(a).isDirectory() && !getAtAnyCost(b).isDirectory())
-            return -1;
-        else if (getAtAnyCost(b).isDirectory() && !getAtAnyCost(a).isDirectory())
-            return 1;
-
-        for (Comparator<Path> comparator : comparators) {
-            int result = comparator.compare(a, b);
-            if (result != 0)
-                return result;
-        }
-
-        return 0;
-    }
-
-    private class NameComparator implements Comparator<Path> {
-        @Override
-        public int compare(Path o1, Path o2) {
-            return o1.getFileName().toString().compareTo(o2.getFileName().toString());
-        }
-    }
-
-    private class SizeComparator implements Comparator<Path> {
-        @Override
-        public int compare(Path o1, Path o2) {
-            return Long.compare(getAtAnyCost(o1).size(), getAtAnyCost(o2).size());
-        }
-    }
-
-    private class DateComparator implements Comparator<Path> {
-        @Override
-        public int compare(Path o1, Path o2) {
-            return getAtAnyCost(o1).lastModifiedTime().compareTo(getAtAnyCost(o2).lastModifiedTime());
-        }
-    }
-
-    //any means necessary
-    private BasicFileAttributes getAtAnyCost(Path path) {
-        BasicFileAttributes result = cache.get(path);
-        if (result == null) try {
-            result = Files.readAttributes(path, BasicFileAttributes.class);
-            cache.put(path, result);
-        } catch (IOException e) {
-            throw new IllegalStateException("Cannot access file");
-        }
-        return result;
+        return complexComparator.compare(a, b);
     }
 }
