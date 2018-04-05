@@ -1,6 +1,6 @@
 package com.dekinci.myls.sorting;
 
-import com.dekinci.myls.application.PathAttributeManager;
+import com.dekinci.myls.application.AttributeManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileComparatorTest {
     private List<Path> paths = new ArrayList<>();
-    private PathAttributeManager cacheManager = PathAttributeManager.getCache();
+    private AttributeManager cacheManager = AttributeManager.getManager();
 
     private final static int files = 8;
     private final static int dirs = 2;
@@ -63,7 +63,7 @@ class FileComparatorTest {
 
     @Test
     void test() {
-        FileComparator comparator = createComparator(Order.reversed(Attribute.SIZE), Order.straight(Attribute.NAME));
+        FileComparator comparator = createComparator(Order.straight(Attribute.FOLDER), Order.reversed(Attribute.SIZE), Order.straight(Attribute.NAME));
         print();
         paths.sort(comparator);
         print();

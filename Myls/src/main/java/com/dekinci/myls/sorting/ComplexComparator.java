@@ -6,7 +6,7 @@ import java.util.List;
 public class ComplexComparator<T> implements Comparator<T> {
     private List<Comparator<T>> comparators;
 
-    public ComplexComparator(List<Comparator<T>> comparators) {
+    ComplexComparator(List<Comparator<T>> comparators) {
         this.comparators = comparators;
     }
 

@@ -4,18 +4,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class PathAttributeManager {
-    private static final AtomicReference<PathAttributeManager> instance = new AtomicReference<>();
+public class AttributeManager {
+    private static final AtomicReference<AttributeManager> instance = new AtomicReference<>();
 
-    public static PathAttributeManager getCache() {
+    public static AttributeManager getManager() {
         if (instance.get() == null)
-            synchronized (PathAttributeManager.class) {
+            synchronized (AttributeManager.class) {
                 if (instance.get() == null)
-                    instance.set(new PathAttributeManager());
+                    instance.set(new AttributeManager());
             }
 
         return instance.get();
@@ -32,5 +33,17 @@ public class PathAttributeManager {
             throw new IllegalStateException("Cannot access file");
         }
         return result;
+    }
+
+    public PosixFileAttributes getPosix(Path path) {
+        try {
+            PosixFileAttributes result = Files.readAttributes(path, PosixFileAttributes.class);
+            cacheMap.put(path, result);
+            return result;
+        } catch (UnsupportedOperationException e) {
+            return null;
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot access file");
+        }
     }
 }

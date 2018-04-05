@@ -53,7 +53,7 @@ public class Args {
             die("Wrong arguments");
 
         if (Files.notExists(args.getPath()))
-            die("File is not found!");
+            die("File " + args.getPath().toAbsolutePath().toString() + " is not found!");
 
         if (args.getSortingOrder().isEmpty())
             die("Sorting order is not specified");
@@ -74,7 +74,7 @@ public class Args {
     private List<Path> path;
 
     @Parameter(names = {"--long", "-l"}, description = Descriptions.isLong)
-    private boolean isLong = false;
+    private boolean isDetailed = false;
 
     @Parameter(names = {"-h", "--human-readable"}, description = Descriptions.isHumanable)
     private boolean isHumanable = false;
@@ -130,6 +130,13 @@ public class Args {
                     case 'd':
                         addIfNotPresent(Order.reversed(Attribute.DATE));
                         break;
+
+                    case 'F':
+                        addIfNotPresent(Order.straight(Attribute.FOLDER));
+                        break;
+                    case 'f':
+                        addIfNotPresent(Order.reversed(Attribute.FOLDER));
+                        break;
                     default:
                         die("Wrong sorting attribute");
                 }
@@ -148,8 +155,8 @@ public class Args {
         return path.get(0);
     }
 
-    public boolean isLong() {
-        return isLong;
+    public boolean isDetailed() {
+        return isDetailed;
     }
 
     public boolean isHumanable() {
@@ -173,7 +180,7 @@ public class Args {
         if (this == o) return true;
         if (!(o instanceof Args)) return false;
         Args args = (Args) o;
-        return isLong == args.isLong &&
+        return isDetailed == args.isDetailed &&
                 isHumanable == args.isHumanable &&
                 help == args.help &&
                 Objects.equals(path, args.path) &&
@@ -183,6 +190,6 @@ public class Args {
 
     @Override
     public int hashCode() {
-        return Objects.hash(path, isLong, isHumanable, sorts, output, help);
+        return Objects.hash(path, isDetailed, isHumanable, sorts, output, help);
     }
 }

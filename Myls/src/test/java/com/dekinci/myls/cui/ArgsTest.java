@@ -39,7 +39,7 @@ class ArgsTest {
         Args args = Args.parse(argStr);
 
         assertEquals(path, args.getPath().toString());
-        assertTrue(args.isLong());
+        assertTrue(args.isDetailed());
         assertFalse(args.isHumanable());
         assertEquals(Sorting.Order.straight(Sorting.Attribute.NAME), args.getSortingOrder().get(0));
 

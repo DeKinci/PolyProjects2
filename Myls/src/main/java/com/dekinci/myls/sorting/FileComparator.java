@@ -1,6 +1,6 @@
 package com.dekinci.myls.sorting;
 
-import com.dekinci.myls.application.PathAttributeManager;
+import com.dekinci.myls.application.AttributeManager;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -11,16 +11,15 @@ import static com.dekinci.myls.sorting.Sorting.Order;
 
 public class FileComparator implements Comparator<Path> {
     private ComplexComparator<Path> complexComparator;
-    private PathAttributeManager cacheManager = PathAttributeManager.getCache();
+    private AttributeManager cacheManager = AttributeManager.getManager();
 
-    private Comparator<Path> directoryFileComparator = Comparator.comparing(a -> !cacheManager.get(a).isDirectory());
+    private Comparator<Path> dirComparator = Comparator.comparing(a -> !cacheManager.get(a).isDirectory());
     private Comparator<Path> nameComparator = Comparator.comparing(a -> a.getFileName().toString());
     private Comparator<Path> sizeComparator = Comparator.comparingLong(a -> cacheManager.get(a).size());
     private Comparator<Path> dateComparator = Comparator.comparing(a -> cacheManager.get(a).lastModifiedTime());
 
     public FileComparator(List<Order> orders) {
         List<Comparator<Path>> comparators = new ArrayList<>();
-        comparators.add(directoryFileComparator);
         for (Order order : orders)
             comparators.add(createComparator(order));
         complexComparator = new ComplexComparator<>(comparators);
@@ -38,6 +37,9 @@ public class FileComparator implements Comparator<Path> {
                 break;
             case DATE:
                 result = dateComparator;
+                break;
+            case FOLDER:
+                result = dirComparator;
                 break;
         }
 

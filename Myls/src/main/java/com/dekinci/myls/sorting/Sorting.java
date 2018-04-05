@@ -7,6 +7,7 @@ public class Sorting {
         NAME,
         SIZE,
         DATE,
+        FOLDER
     }
 
     public static class Order {

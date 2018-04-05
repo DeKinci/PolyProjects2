@@ -14,9 +14,10 @@ public class Descriptions {
 
     public static final String sort = "Sorts files in specified order. Lowercase letter - descending, uppercase - ascending\n" +
             "\t  Available sort types: \n" +
-            "\t\t  By name;\t N / n \n" +
+            "\t\t  By folder: F / f \n" +
+            "\t\t  By name:\t N / n \n" +
             "\t\t  By size:\t S / s \n" +
-            "\t\t  By last modification date: D / d \n" +
+            "\t\t  By last mod date: D / d \n" +
             "\t  You can specify different sort types in a row, first one will be applied first. \n" +
             "\t  Example: \"-s sND\" will give a list of files sorted from smaller size to bigger, " +
             "where files of equal sizes sorted by name alphabetically, and equal size and name " +
