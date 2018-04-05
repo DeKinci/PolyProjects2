@@ -1,28 +1,21 @@
 package com.dekinci.myls;
 
 import com.dekinci.myls.sorting.FileComparator;
-import com.dekinci.myls.sorting.Sorting;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
-import static com.dekinci.myls.sorting.Sorting.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.dekinci.myls.sorting.Sorting.Attribute;
+import static com.dekinci.myls.sorting.Sorting.Order;
 import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.matches;
-import static org.mockito.ArgumentMatchers.startsWith;
 import static org.mockito.Mockito.*;
 
 class MylsTest {

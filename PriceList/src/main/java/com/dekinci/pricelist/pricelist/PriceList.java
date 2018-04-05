@@ -79,6 +79,6 @@ public class PriceList<P extends Product> {
      */
     public Optional<Price> calculateCost(int id, int amount) throws IllegalArgumentException {
         Optional<P> product = get(id);
-        return product.isPresent() ? Optional.of(get(id).get().getPrice().multiply(amount)) : Optional.empty();
+        return product.map(p -> get(id).get().getPrice().multiply(amount));
     }
 }

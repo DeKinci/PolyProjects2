@@ -6,7 +6,7 @@
 
     <groupId>com.dekinci</groupId>
     <artifactId>Myls</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -28,7 +28,48 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <finalName>${artifactId}-${version}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <configuration>
+                    <target>
+                        <echo>ANT TASK - deleting files....</echo>
+                        <delete>
+                            <fileset dir="${basedir}/jar">
+                                <include name="*.jar"/>
+                            </fileset>
+                        </delete>
+                        <echo>ANT TASK - copying files....</echo>
+                        <copy todir="${basedir}/jar" overwrite="true" flatten="true">
+                            <fileset dir="${basedir}/target">
+                                <include name="*.jar"/>
+                            </fileset>
+                        </copy>
+                    </target>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
