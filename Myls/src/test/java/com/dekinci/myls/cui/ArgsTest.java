@@ -6,10 +6,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class ArgsTest {
     private String path;
@@ -18,6 +23,8 @@ class ArgsTest {
     private Path arg;
     private Path out;
 
+    private PrintStream stream = mock(PrintStream.class);
+
     @BeforeEach
     void prepare() throws IOException {
         arg = Files.createTempFile("in", null).toAbsolutePath();
@@ -25,6 +32,8 @@ class ArgsTest {
 
         out = Files.createTempFile("out", null).toAbsolutePath();
         outPath = out.toString();
+
+        System.setOut(stream);
     }
 
     @AfterEach
@@ -59,22 +68,26 @@ class ArgsTest {
         assertThrows(IllegalArgumentException.class, () -> Args.parse(path, "-s", "nN"));
         assertThrows(IllegalArgumentException.class, () -> Args.parse(path, "-s", ""));
         assertThrows(IllegalArgumentException.class, () -> Args.parse(path, "-s", "kek"));
+        verify(stream, times(3)).println(contains("Usage:"));
     }
 
     @Test
     void testUnfilledFlag() {
         String argStr[] = {path, "-l", "-o"};
         assertThrows(IllegalArgumentException.class, () -> Args.parse(argStr));
+        verify(stream).println(contains("Usage:"));
     }
 
     @Test
     void testNonexistentFlag() {
         String argStr[] = {path, "-noSuchFlag"};
         assertThrows(IllegalArgumentException.class, () -> Args.parse(argStr));
+        verify(stream).println(contains("Usage:"));
     }
 
     @Test
     void testEmptyArgs() {
         assertThrows(IllegalArgumentException.class, Args::parse);
+        verify(stream).println(contains("Usage:"));
     }
 }

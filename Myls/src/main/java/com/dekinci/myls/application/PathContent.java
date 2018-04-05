@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class PathContent {
     public static List<Path> get(Path path) {
         try (Stream<Path> filePathStream = Files.walk(path, 1)) {
-            return filePathStream.collect(Collectors.toList());
+            return filePathStream.filter((p) -> !(AttributeManager.getManager().get(p).isDirectory() && p.equals(path))).collect(Collectors.toList());
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }

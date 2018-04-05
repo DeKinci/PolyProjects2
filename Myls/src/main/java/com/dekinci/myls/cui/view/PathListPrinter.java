@@ -21,7 +21,7 @@ public class PathListPrinter {
             }
 
             stringBuilder.append(builder.name(path));
-            System.out.println(stringBuilder);
+            System.out.println(stringBuilder.toString());
         }
     }
 }

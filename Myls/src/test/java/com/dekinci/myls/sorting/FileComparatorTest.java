@@ -1,5 +1,6 @@
 package com.dekinci.myls.sorting;
 
+import com.dekinci.myls.Utils;
 import com.dekinci.myls.application.AttributeManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,15 +51,7 @@ class FileComparatorTest {
 
     @AfterEach
     void tearDown() {
-        paths.forEach(this::delete);
-    }
-
-    private void delete(Path p) {
-        try {
-            Files.delete(p);
-        } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage());
-        }
+        paths.forEach(Utils::delete);
     }
 
     @Test
