@@ -1,5 +1,6 @@
 package com.dekinci.myls;
 
+import com.dekinci.myls.cui.view.RoboBuilder;
 import com.dekinci.myls.sorting.FileComparator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +57,7 @@ class MylsTest {
         Myls myls = new Myls(testdir);
         Comparator<Path> comparator = new FileComparator(List.of(Order.straight(Attribute.FOLDER), Order.straight(Attribute.NAME)));
 
-        myls.ls(comparator, false, false);
+        myls.ls(comparator, new RoboBuilder(), false);
 
         verify(out).println(contains("total " + (DIR_AMOUNT + FILES_AMOUNT)));
         verify(out, times(DIR_AMOUNT)).println(contains("dir_"));

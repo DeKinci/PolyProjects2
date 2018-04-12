@@ -3,7 +3,7 @@ package com.dekinci.myls.sorting;
 import java.util.Comparator;
 import java.util.List;
 
-public class ComplexComparator<T> implements Comparator<T> {
+class ComplexComparator<T> implements Comparator<T> {
     private List<Comparator<T>> comparators;
 
     ComplexComparator(List<Comparator<T>> comparators) {

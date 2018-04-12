@@ -16,13 +16,17 @@ public class Utils {
         }
     }
 
-    public static void forEach(int n, Consumer<? super Integer> action) {
+    static void forEach(int n, Consumer<? super Integer> action) {
         Objects.requireNonNull(action);
         for (int i = 0; i < n; i++)
             action.accept(i);
     }
 
-    public static Path createFile(Path path) {
+    static Path createFile(Path path, String name) {
+        return createFile(subPath(path, name));
+    }
+
+    private static Path createFile(Path path) {
         try {
             Files.createFile(path);
             return path;
@@ -31,11 +35,11 @@ public class Utils {
         }
     }
 
-    public static Path createFile(Path path, String name) {
-        return createFile(subPath(path, name));
+    static Path createDir(Path path, String name) {
+        return createDir(subPath(path, name));
     }
 
-    public static Path createDir(Path path) {
+    private static Path createDir(Path path) {
         try {
             Files.createDirectory(path);
             return path;
@@ -44,11 +48,7 @@ public class Utils {
         }
     }
 
-    public static Path createDir(Path path, String name) {
-        return createDir(subPath(path, name));
-    }
-
-    public static Path subPath(Path path, String sub) {
+    private static Path subPath(Path path, String sub) {
         return Paths.get(path.toString(), sub);
     }
 }

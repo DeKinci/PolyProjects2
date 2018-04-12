@@ -22,7 +22,7 @@ import static com.dekinci.myls.sorting.Sorting.*;
  */
 public class Args {
     public static Args parse(String... str) {
-        Args args = new Args();
+        var args = new Args();
 
         try {
             JCommander.newBuilder()
@@ -39,7 +39,7 @@ public class Args {
     }
 
     private static void handleParameterException(ParameterException e) {
-        JCommander commander = e.getJCommander();
+        var commander = e.getJCommander();
         if (commander == null)
             commander = JCommander.newBuilder().addObject(new Args()).build();
         commander.setProgramName(Descriptions.PROGRAM_NAME);
@@ -70,28 +70,28 @@ public class Args {
     }
 
     //List of paths is a costyil' to fix JCommander's main parameter converter bug
-    @Parameter(description = Descriptions.path, converter = PathConverter.class, required = true)
+    @Parameter(description = Descriptions.PATH, converter = PathConverter.class, required = true)
     private List<Path> path;
 
-    @Parameter(names = {"--long", "-l"}, description = Descriptions.isLong)
+    @Parameter(names = {"--long", "-l"}, description = Descriptions.IS_LONG)
     private boolean isDetailed = false;
 
-    @Parameter(names = {"-h", "--human-readable"}, description = Descriptions.isHumanable)
+    @Parameter(names = {"-h", "--human-readable"}, description = Descriptions.IS_HUMANABLE)
     private boolean isHumanable = false;
 
-    @Parameter(names = {"-s", "--sort"}, description = Descriptions.sort, listConverter = SortingTypesConverter.class)
+    @Parameter(names = {"-s", "--sort"}, description = Descriptions.SORT, listConverter = SortingTypesConverter.class)
     private List<Order> sorts = Collections.singletonList(Order.straight(Attribute.NAME));
 
-    @Parameter(names = {"-o", "--output"}, description = Descriptions.output, converter = OutputStreamConverter.class)
+    @Parameter(names = {"-o", "--output"}, description = Descriptions.OUTPUT, converter = OutputStreamConverter.class)
     private PrintStream output = System.out;
 
-    @Parameter(names = "--help", description = Descriptions.help, help = true)
+    @Parameter(names = "--help", description = Descriptions.HELP, help = true)
     private boolean help = false;
 
     private static class OutputStreamConverter implements IStringConverter<PrintStream> {
         @Override
         public PrintStream convert(String s) {
-            Path path = Paths.get(s);
+            var path = Paths.get(s);
             try {
                 return new PrintStream(new FileOutputStream(path.toFile()));
             } catch (FileNotFoundException e) {
@@ -106,7 +106,7 @@ public class Args {
 
         @Override
         public List<Order> convert(String s) {
-            char[] sorters = s.trim().toCharArray();
+            var sorters = s.trim().toCharArray();
 
             for (char sort : sorters)
                 switch (sort) {
@@ -179,7 +179,7 @@ public class Args {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Args)) return false;
-        Args args = (Args) o;
+        var args = (Args) o;
         return isDetailed == args.isDetailed &&
                 isHumanable == args.isHumanable &&
                 help == args.help &&

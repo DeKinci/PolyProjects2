@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.util.HashSet;
-import java.util.Set;
 
 public class RoboBuilder implements InfoBuilder {
     @Override
@@ -12,14 +11,14 @@ public class RoboBuilder implements InfoBuilder {
         if (attributes == null)
             return "unsupported_OS";
 
-        Set<Permission> permissions = new HashSet<>();
+        var permissions = new HashSet<Permission>();
         attributes.permissions().forEach((p) -> permissions.add(Permission.fromPosix(p)));
 
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.append(attributes.isDirectory() ? "d" : "-");
 
         int owner = 0, group = 0, other = 0;
-        Permission[] values = Permission.values();
+        var values = Permission.values();
 
         for (int i = 0; i < 3; i++)
             owner += permissions.contains(values[i]) ? values[i].getMask() : 0;

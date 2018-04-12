@@ -82,7 +82,7 @@ class FileComparatorTest {
                         assertTrue(compareIndexNames(i, j));
                     else if (iSize > jSize)
                         assertTrue(i < j);
-                    else if (iSize < jSize)
+                    else
                         assertTrue(i > j);
                 }
             }

@@ -1,18 +1,18 @@
 package com.dekinci.myls.cui;
 
-public class Descriptions {
-    public static final String PROGRAM_NAME = "ls is not low skill";
+class Descriptions {
+    static final String PROGRAM_NAME = "ls is not low skill";
 
-    public static final String path = "Specifies the path to the directory or file to show";
+    static final String PATH = "Specifies the path to the directory or file to show";
 
-    public static final String isLong = "Turns output in long mode, " +
+    static final String IS_LONG = "Turns output in long mode, " +
             "where rwx rights (in number format), " +
             "last modification date and size (in bytes) are also listed";
 
-    public static final String isHumanable = "Turns output in comfortable mode " +
+    static final String IS_HUMANABLE = "Turns output in comfortable mode " +
             "(KB, MB, GB file size, rwx rights, ellipses for long names).";
 
-    public static final String sort = "Sorts files in specified order. Lowercase letter - descending, uppercase - ascending\n" +
+    static final String SORT = "Sorts files in specified order. Lowercase letter - descending, uppercase - ascending\n" +
             "\t  Available sort types: \n" +
             "\t\t  By folder: F / f \n" +
             "\t\t  By name:\t N / n \n" +
@@ -24,7 +24,7 @@ public class Descriptions {
             "files (maybe some magical sort of them, but anyway) will be sorted by modification " +
             "date from newer to older";
 
-    public static final String output = "Specifies output stream, console is default.";
+    static final String OUTPUT = "Specifies output stream, console is default.";
 
-    public static final String help = "Prints help manual";
+    static final String HELP = "Prints help manual";
 }

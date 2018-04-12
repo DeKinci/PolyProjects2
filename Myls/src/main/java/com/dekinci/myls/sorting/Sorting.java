@@ -22,7 +22,7 @@ public class Sorting {
             return new Order(attribute, true);
         }
 
-        public boolean isReversed() {
+        boolean isReversed() {
             return reversed;
         }
 
@@ -43,7 +43,7 @@ public class Sorting {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (!(o instanceof Order)) return false;
-            Order order = (Order) o;
+            var order = (Order) o;
             return reversed == order.reversed &&
                     attribute == order.attribute;
         }

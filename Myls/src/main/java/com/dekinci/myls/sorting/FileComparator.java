@@ -19,7 +19,7 @@ public class FileComparator implements Comparator<Path> {
     private Comparator<Path> dateComparator = Comparator.comparing(a -> cacheManager.get(a).lastModifiedTime());
 
     public FileComparator(List<Order> orders) {
-        List<Comparator<Path>> comparators = new ArrayList<>();
+        var comparators = new ArrayList<Comparator<Path>>();
         for (Order order : orders)
             comparators.add(createComparator(order));
         complexComparator = new ComplexComparator<>(comparators);

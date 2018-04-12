@@ -7,25 +7,21 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class AttributeManager {
-    private static final AtomicReference<AttributeManager> instance = new AtomicReference<>();
+    private static AttributeManager instance;
 
     public static AttributeManager getManager() {
-        if (instance.get() == null)
-            synchronized (AttributeManager.class) {
-                if (instance.get() == null)
-                    instance.set(new AttributeManager());
-            }
+        if (instance == null)
+            instance = new AttributeManager();
 
-        return instance.get();
+        return instance;
     }
 
     private Map<Path, BasicFileAttributes> cacheMap = new WeakHashMap<>();
 
     public BasicFileAttributes get(Path path) {
-        BasicFileAttributes result = cacheMap.get(path);
+        var result = cacheMap.get(path);
         if (result == null) try {
             result = Files.readAttributes(path, BasicFileAttributes.class);
             cacheMap.put(path, result);
@@ -37,7 +33,7 @@ public class AttributeManager {
 
     public PosixFileAttributes getPosix(Path path) {
         try {
-            PosixFileAttributes result = Files.readAttributes(path, PosixFileAttributes.class);
+            var result = Files.readAttributes(path, PosixFileAttributes.class);
             cacheMap.put(path, result);
             return result;
         } catch (UnsupportedOperationException e) {

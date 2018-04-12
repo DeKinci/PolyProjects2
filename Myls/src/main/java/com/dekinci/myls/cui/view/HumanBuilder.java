@@ -9,7 +9,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Set;
 
 public class HumanBuilder implements InfoBuilder {
     private static final String[] units = new String[]{"B ", "KB", "MB", "GB", "TB"};
@@ -19,10 +18,10 @@ public class HumanBuilder implements InfoBuilder {
         if (attributes == null)
             return "unsupported_OS";
 
-        Set<Permission> permissions = new HashSet<>();
+        var permissions = new HashSet<Permission>();
         attributes.permissions().forEach((p) -> permissions.add(Permission.fromPosix(p)));
 
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.append(attributes.isDirectory() ? "d" : "-");
 
         for (Permission permission : Permission.values())
@@ -39,8 +38,8 @@ public class HumanBuilder implements InfoBuilder {
 
     @Override
     public String date(BasicFileAttributes attributes) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-        Date date = new Date(attributes.lastModifiedTime().toMillis());
+        var dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        var date = new Date(attributes.lastModifiedTime().toMillis());
         return dateFormat.format(date);
     }
 
